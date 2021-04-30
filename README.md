@@ -1,13 +1,13 @@
-# 🧪 { TeamName } — URL Shortener 🧪
+# 🧪URLshortened  — URL Shortener 🧪
 
 This is a template project for "Modern methods and technologies of software development" course labs. Use it to create
 your own repository and fulfill/rewrite this document (at least, replace everything in `{...}`).
 
 ## Team
 
-- { Student's Name and Surname (in English) } { email } — { GitHub account }
-- ...
-- { Student's Name and Surname (in English) } { email } — { GitHub account }
+- Berkay Nuri Dayioglu berkayndg@gmail.com - @berkay3427
+- jan stephan janstephan@hotmail.com -
+- bestoros michel arnest ishak m.bestoros@gmail.com - 
 
 ## Design document
 
