@@ -1,4 +1,4 @@
-# 🧪URLshortened  — URL Shortener 🧪
+# shortenr  — URL Shortener 🧪
 
 This is a template project for "Modern methods and technologies of software development" course labs. Use it to create
 your own repository and fulfill/rewrite this document (at least, replace everything in `{...}`).
