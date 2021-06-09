@@ -35,10 +35,10 @@ class Config(NamedTuple):
     port: int
 
 
-def load_config() -> Config:
+def load_config(app_config) -> Config:
     try:
-        config_dict = _CONFIG_VALIDATOR.check(os.environ)
-        return Config(**config_dict)
+        app_config_validated = _CONFIG_VALIDATOR.check(app_config)
+        return Config(**app_config_validated)
     except t.DataError as e:
         log.exception('Invalid configuration. Errors: %s', e.as_dict())
         sys.exit(os.EX_CONFIG)
