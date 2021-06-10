@@ -3,7 +3,7 @@ from typing import Dict, Optional
 
 from tinydb import TinyDB, Query
 
-class PermanentStorage(Storage):
+class PermanentStorage():
     def __init__(self):
         self._write_lock: Lock = Lock()
         users = TinyDB('db/users.json')
