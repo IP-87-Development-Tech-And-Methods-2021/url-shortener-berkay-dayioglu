@@ -1,11 +1,10 @@
-from abc import ABC, abstractmethod
 from threading import Lock
 from typing import Dict, Optional
 
 from tinydb import TinyDB, Query
 
 class PermanentStorage(Storage):
-    def __init__():
+    def __init__(self):
         self._write_lock: Lock = Lock()
         users = TinyDB('db/users.json')
         User = Query()
