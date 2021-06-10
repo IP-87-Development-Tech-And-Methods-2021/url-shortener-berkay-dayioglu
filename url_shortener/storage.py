@@ -6,8 +6,8 @@ from tinydb import TinyDB, Query
 class PermanentStorage():
     def __init__(self):
         self._write_lock: Lock = Lock()
-        users = TinyDB('db/users.json')
-        User = Query()
+        self.users = TinyDB('url_shortener/db/users.json')
+        self.User = Query()
 
     def read_user(self, email: str):
         return users.search(User.email == email)
@@ -15,11 +15,11 @@ class PermanentStorage():
     def add_user(self, email: str, password):
         with self._write_lock:
             self._write_lock: Lock = Lock()
-            users.insert({"email": email, "password": password, "url_list": {}})
+            self.users.insert({"email": email, "password": password, "url_list": {}})
 
     def remove_user(self, email: str):
         with self._write_lock:
-            users.remove(User.email == email)
+            self.users.remove(User.email == email)
 
     def read_url(self, email: str, url_short: str):
         user_data = users.search(User.email == email)
@@ -34,7 +34,7 @@ class PermanentStorage():
     def remove_url(self, email: str, url_short: str):
         with self._write_lock:
             user_data = users.search(User.email == email)
-            users_data.url_list.pop("url_short", None)
+            user_data.url_list.pop("url_short", None)
 
 
 class InMemoryStorage():

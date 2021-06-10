@@ -258,3 +258,6 @@ Thumbs.db #thumbnail cache on Windows
 *.swp
 *.swo
 *~
+
+# db files
+url_shortener/db/*

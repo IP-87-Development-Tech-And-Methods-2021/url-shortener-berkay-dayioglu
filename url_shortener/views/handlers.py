@@ -9,15 +9,12 @@ from pyramid.response import Response
 def create_user(request: Request) -> Response:
     logic: Logic = request.registry.logic
     try:
-        user = User(email=request.json_body.get('email'),
-                    password=request.json_body.get('password'))
+        email = request.json_body.get('email')
+        password = request.json_body.get('password')
     except:
         return Response(status=httplib.BAD_REQUEST, json_body={
                 'status': 'error',
                 'description': 'email or password missing' })
-
-    email = request.json_body.get('email')
-    password = request.json_body.get('password')
 
     if logic.add_user(email, password):
         return Response(status=httplib.CREATED, json_body={

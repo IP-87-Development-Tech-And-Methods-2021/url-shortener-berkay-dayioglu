@@ -15,40 +15,41 @@ class Logic:
         self._storage: PermanentStorage = storage
         self._storage_mem: InMemoryStorage = storage_mem
         self._check_and_write_lock: Lock = Lock()
-        t_email = t.Email
-        t_pwd   = t.String(min_length=6, max_length=63)
+        self.t_email = t.Email
+        self.t_pwd   = t.String(min_length=6, max_length=63)
 
     # TODO: add logging
     #       finish trafaret checking
-    def read_user(email: str):
+    def read_user(self, email: str):
         return self._storage.read_user(email)
-    def add_user(email:str, password: str):
-        try:
-            t_email.check(email)
-            t_pwd.check(password)
-            self._storage.add_user(email, password)
-            return True
-        except:
-            return False
 
-    def remove_user(email:str):
+    def add_user(self, email:str, password: str):
+        try:
+            self.t_email.check(email)
+            self.t_pwd.check(password)
+        except:
+            print("password or email not fulfilling requirements")
+            return False
+        self._storage.add_user(email, password)
+        return True
+
+    def remove_user(self, email:str):
         self._storage.remove_user(email, password)
 
     # def read_url(email:str, url_short: str):
     #    self._storage.read_url(
-    def add_url(email:str, url_short: str, url_orig: str):
+    def add_url(self, email:str, url_short: str, url_orig: str):
         self._storage.add_url(email, url_short, url_orig)
-    def remove_url(email:str, url_short: str):
+    def remove_url(self, email:str, url_short: str):
         self._storage.remove_url(email, url_short)
 
-    def add_token(email: str):
-        tokens = self._storage_mem.read(email)
-        if tokens is not None:
+    def add_token(self, email: str):
+        tokens = self._storage_mem._data
+        if tokens.get(email) is not None:
             return False
-        tokens[email] = urandom(128)
-        self._storage_mem.write(tokens)
+        self._storage_mem.write(email, urandom(128))
         return True
-    def remove_token(email: str): 
+    def remove_token(self, email: str): 
         tokens = self._storage_mem.read(email)
         if tokens is None:
             return False
