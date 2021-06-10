@@ -34,8 +34,8 @@ class Logic:
     def remove_user(email:str):
         self._storage.remove_user(email, password)
 
-    def read_url(email:str, url_short: str):
-        self._storage.
+    # def read_url(email:str, url_short: str):
+    #    self._storage.read_url(
     def add_url(email:str, url_short: str, url_orig: str):
         self._storage.add_url(email, url_short, url_orig)
     def remove_url(email:str, url_short: str):

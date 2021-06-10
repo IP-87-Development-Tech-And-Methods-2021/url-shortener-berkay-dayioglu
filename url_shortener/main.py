@@ -3,7 +3,7 @@ import ujson as json
 from url_shortener.views import setup_routes
 from url_shortener.config import Config
 
-from url_shortener.storage import InMemoryStorage
+from url_shortener.storage import InMemoryStorage, PermanentStorage
 from url_shortener.logic import Logic
 from url_shortener.auth import TokenAuthenticationPolicy
 
@@ -45,10 +45,11 @@ def make_app(app_config: Config):
     setup_routes(config)
 
     # setup "global" objects into the registry
-    storage = InMemoryStorage()
+    storage_mem = InMemoryStorage()
+    storage = PermanentStorage
 
     config.registry.base_url: str = app_config.base_url
-    config.registry.logic = Logic(storage=storage)
+    config.registry.logic = Logic(storage=storage, storage_mem=storage_mem)
 
     # Setup authentication and authorization from `.auth` module
     config.set_authentication_policy(TokenAuthenticationPolicy())
