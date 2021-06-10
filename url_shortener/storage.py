@@ -2,22 +2,34 @@ from abc import ABC, abstractmethod
 from threading import Lock
 from typing import Dict, Optional
 
+from tinydb import TinyDB, Query
 
-class Storage(ABC):
-    """ Declare base interface for storage """
+class PermanentStorage(Storage):
+    def __init__():
+        self._write_lock: Lock = Lock()
+        users = TinyDB('db/users.json')
+        User = Query()
 
-    @abstractmethod
-    def read(self, key: str) -> Optional[str]:
-        """ Returns stored value by key """
-        raise NotImplementedError
+    def read_user(self, email: str):
+        users.search(User.email == email)
 
-    @abstractmethod
-    def write(self, key: str, value: str):
-        """ Stores value by key """
-        raise NotImplementedError
+    def add_user(self, email: str, password: str):
+        users.insert({"email": email, "password": password, "url_list": {}})
+
+    def remove_user(self, email):
+        users.remove(User.email == email)
+
+    def add_url(self, email, url_orig, url_short):
+        user_data = users.search(User.email == email)
+        user_data.url_list[url_short] = url_orig
+        users.update({"url_list": user_data.url_list}, User.email == email)
+
+    def remove_url(self, email, url_short):
+        user_data - users.search(User.email == email)
+        users_data.url_list.pop("url_short", None)
 
 
-class InMemoryStorage(Storage):
+class InMemoryStorage():
     """ Simple in-memory implementation of key-value storage.
     Note, how it is inherited from abstract `Storage` class
     and implements all its abstract methods. This is done this way
@@ -25,7 +37,6 @@ class InMemoryStorage(Storage):
     """
 
     def __init__(self):
-        super().__init__()
         self._write_lock: Lock = Lock()
         self._data: Dict[str, str] = {}
 
