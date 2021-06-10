@@ -13,19 +13,24 @@ class PermanentStorage(Storage):
         users.search(User.email == email)
 
     def add_user(self, email: str, password: str):
-        users.insert({"email": email, "password": password, "url_list": {}})
+        with self._write_lock:
+            self._write_lock: Lock = Lock()
+            users.insert({"email": email, "password": password, "url_list": {}})
 
     def remove_user(self, email):
-        users.remove(User.email == email)
+        with self._write_lock:
+            users.remove(User.email == email)
 
     def add_url(self, email, url_orig, url_short):
-        user_data = users.search(User.email == email)
-        user_data.url_list[url_short] = url_orig
-        users.update({"url_list": user_data.url_list}, User.email == email)
+        with self._write_lock:
+            user_data = users.search(User.email == email)
+            user_data.url_list[url_short] = url_orig
+            users.update({"url_list": user_data.url_list}, User.email == email)
 
     def remove_url(self, email, url_short):
-        user_data - users.search(User.email == email)
-        users_data.url_list.pop("url_short", None)
+        with self._write_lock:
+            user_data - users.search(User.email == email)
+            users_data.url_list.pop("url_short", None)
 
 
 class InMemoryStorage():
