@@ -53,6 +53,26 @@ def login_user(request: Request) -> Response:
         'status': 'token created',
         'token': token })
 
+# TODO: unique token, session cookie?
+def logout_user(request: Request) -> Response:
+    logic: Logic = request.registry.logic
+
+    try:
+        email = request.json_body.get('email')
+        token = request.json_body.get('token')
+    except:
+        return Response(status=httplib.BAD_REQUEST, json_body={
+            'status': 'error',
+            'description': 'email or token missing'})
+
+    if logic.remove_token(email):
+        return Response(status=httplib.OK, json_body={
+            'status': 'logged out'})
+
+    return Response(status=httplib.UNAUTHORIZED, json_body={
+        'status': 'error',
+        'description': 'wrong email or token'})
+
 def notfound(request: Request) -> Response:
     return Response(status=httplib.NOT_FOUND, json_body={
         'status': 'error',

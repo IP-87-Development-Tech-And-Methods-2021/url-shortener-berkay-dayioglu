@@ -1,11 +1,9 @@
 from .handlers import (
-    public_resource_example,
-    protected_resource_read_example,
-    protected_resource_write_example,
     notfound,
     forbidden,
     create_user,
-    login_user
+    login_user,
+    logout_user
 )
 
 PROTECTED = 'url_shortener.auth.protected'
@@ -27,6 +25,13 @@ def setup_routes(config):
                      pattern='/login')
     config.add_view(login_user,
                     route_name='login_user')
+
+    #User logout
+    config.add_route('logout_user',
+                     request_method='POST',
+                     pattern='/logout')
+    config.add_view(logout_user,
+                    route_name='logout_user')
 
     # Add error views
     config.add_notfound_view(notfound)
