@@ -13,16 +13,45 @@ def create_user(request: Request) -> Response:
         password = request.json_body.get('password')
     except:
         return Response(status=httplib.BAD_REQUEST, json_body={
-                'status': 'error',
-                'description': 'email or password missing' })
+            'status': 'error',
+            'description': 'email or password missing' })
 
     if logic.add_user(email, password):
         return Response(status=httplib.CREATED, json_body={
-            'status': 'Account created',
-            'token': logic.add_token(email) })
+            'status': 'account created'})
 
     return Response(status=httplib.INTERNAL_SERVER_ERROR, json_body={
-        'status': 'Could not save user' })
+        'status': 'could not save user' })
+
+# TODO: pyramid authentication
+
+def login_user(request: Request) -> Response:
+    logic: Logic = request.registry.logic
+    try:
+        email = request.json_body.get('email')
+        password = request.json_body.get('password')
+    except:
+        return Response(status=httplib.BAD_REQUEST, json_body={
+            'status': 'error',
+            'description': 'email or password missing'})
+
+    if logic.authenticate_user(email, password) == False:
+        return Response(status=httplib.UNAUTHORIZED, json_body={
+            'status': 'error',
+            'description': 'wrong email or password'})
+
+    try:
+        logic.add_token(email)
+    except:
+        return Response(status=httplib.INTERNAL_SERVER_ERROR, json_body={
+            'status': 'error',
+            'description': 'could not save token' })
+
+    token = logic.read_token(email)
+
+    return Response(status=httplib.CREATED, json_body={
+        'status': 'token created',
+        'token': token })
 
 
 def protected_resource_read_example(request: Request) -> Response:

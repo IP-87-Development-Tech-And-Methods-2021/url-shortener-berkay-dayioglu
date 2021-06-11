@@ -1,3 +1,5 @@
+import os
+
 from threading import Lock
 from typing import Dict, Optional
 
@@ -5,12 +7,15 @@ from tinydb import TinyDB, Query
 
 class PermanentStorage():
     def __init__(self):
+        dirname = os.path.dirname(__file__)
+        filename_users = os.path.join(dirname, 'db/users.json')
+        self.filename_users = filename_users
         self._write_lock: Lock = Lock()
-        self.users = TinyDB('url_shortener/db/users.json')
+        self.users = TinyDB(filename_users)
         self.User = Query()
 
-    def read_user(self, email: str):
-        return users.search(User.email == email)
+    def get_user_data(self, email: str):
+        return self.users.search(self.User.email == email)[0]
 
     def add_user(self, email: str, password):
         with self._write_lock:
@@ -19,21 +24,21 @@ class PermanentStorage():
 
     def remove_user(self, email: str):
         with self._write_lock:
-            self.users.remove(User.email == email)
+            self.users.remove(self.User.email == email)
 
     def read_url(self, email: str, url_short: str):
-        user_data = users.search(User.email == email)
+        user_data = self.users.search(self.User.email == email)
         return user_data.url_list
 
     def add_url(self, email: str, url_short: str, url_orig):
         with self._write_lock:
-            user_data = users.search(User.email == email)
+            user_data = self.users.search(self.User.email == email)
             user_data.url_list[url_short] = url_orig
-            users.update({"url_list": user_data.url_list}, User.email == email)
+            self.users.update({"url_list": user_data.url_list}, self.User.email == email)
 
     def remove_url(self, email: str, url_short: str):
         with self._write_lock:
-            user_data = users.search(User.email == email)
+            user_data = self.users.search(self.User.email == email)
             user_data.url_list.pop("url_short", None)
 
 

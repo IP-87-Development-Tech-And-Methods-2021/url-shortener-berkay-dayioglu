@@ -4,7 +4,8 @@ from .handlers import (
     protected_resource_write_example,
     notfound,
     forbidden,
-    create_user
+    create_user,
+    login_user
 )
 
 PROTECTED = 'url_shortener.auth.protected'
@@ -12,20 +13,20 @@ PROTECTED = 'url_shortener.auth.protected'
 
 def setup_routes(config):
     """ Configures application routes"""
-    # Add public resources
 
     # User registration
     config.add_route('create_user',
-                    request_method='POST',
-                    pattern='/register')
+                     request_method='POST',
+                     pattern='/register')
     config.add_view(create_user,
-                    route_name='create_user',
-                    renderer='json')
+                    route_name='create_user')
 
-    config.add_view(public_resource_example,
-                    route_name='public_resource_example',
-                    renderer='json')
-    config.add_route('public_resource_example', '/public')
+    # User login
+    config.add_route('login_user',
+                     request_method='POST',
+                     pattern='/login')
+    config.add_view(login_user,
+                    route_name='login_user')
 
     # Add protected resources
     # pass `factory=PROTECTED` to the `add_route` method
