@@ -1,3 +1,6 @@
+import random, string
+import time
+
 import trafaret as t
 
 from threading import Lock
@@ -20,7 +23,7 @@ class Logic:
         self.t_pwd   = t.String(min_length=6, max_length=63)
 
     # TODO: add logging
-    #       finish trafaret checking
+    #       implement trafaret checking in every method
     def read_user_data(self, email: str):
         return self._storage.get_user_data(email)
 
@@ -32,7 +35,7 @@ class Logic:
             print("password or email not fulfilling requirements")
             return False
 
-        if self._storage.get_user_data(email) != []:
+        if self._storage.get_user_data(email) is not None:
             print("email already in use")
             return False
 
@@ -58,6 +61,28 @@ class Logic:
     def remove_url(self, email:str, url_short: str):
         self._storage.remove_url(email, url_short)
 
+    def get_valid_url_string(self, url_short: str):
+        url_list = self._storage.get_all_urls()
+        generate_string = lambda: ''.join(random.choice(string.ascii_uppercase +
+                                          string.ascii_lowercase +
+                                          string.digits
+                                     ) for _ in range(8))
+        
+        timeout = time.time() + 10
+        while time.time() < timeout:
+            new_url = generate_string()
+            for url in url_list:
+                if new_url == url:
+                    continue
+            return new_url
+
+        return -1
+
+    def get_original_url(self, url_short: str):
+        url_list = self._storage.get_all_urls()
+        url_orig = url_list[url_short]
+        return url_orig
+
     # Token operations
     def read_token(self, email: str):
         return self._storage_mem.read(email)
@@ -74,6 +99,7 @@ class Logic:
             return False
         self._storage_mem.write(email, None)
         return True
+
 
 """
     def find_user_by_token(self, token: str) -> Optional[User]:

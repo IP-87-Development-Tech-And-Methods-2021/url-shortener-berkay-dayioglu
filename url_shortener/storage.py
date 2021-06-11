@@ -15,7 +15,12 @@ class PermanentStorage():
         self.User = Query()
 
     def get_user_data(self, email: str):
-        return self.users.search(self.User.email == email)[0]
+        try:
+            user_data = self.users.search(self.User.email == email)[0]
+        except:
+            return None
+
+        return user_data
 
     def add_user(self, email: str, password):
         with self._write_lock:
@@ -26,15 +31,23 @@ class PermanentStorage():
         with self._write_lock:
             self.users.remove(self.User.email == email)
 
-    def read_url(self, email: str, url_short: str):
+    # Maybe clean this up
+    def get_all_urls(self):
+        url_dict_list = [user.get('url_list') for user in self.users.search(self.User.url_list.exists())]
+        url_dict = {}
+        for document in url_dict_list:
+            url_dict.update(document)
+        return url_dict
+
+    def get_user_urls(self, email: str, url_short: str):
         user_data = self.users.search(self.User.email == email)
         return user_data.url_list
 
     def add_url(self, email: str, url_short: str, url_orig):
         with self._write_lock:
-            user_data = self.users.search(self.User.email == email)
-            user_data.url_list[url_short] = url_orig
-            self.users.update({"url_list": user_data.url_list}, self.User.email == email)
+            user_data = self.users.search(self.User.email == email)[0]
+            user_data['url_list'][url_short] = url_orig
+            self.users.update({"url_list": user_data['url_list']}, self.User.email == email)
 
     def remove_url(self, email: str, url_short: str):
         with self._write_lock:
