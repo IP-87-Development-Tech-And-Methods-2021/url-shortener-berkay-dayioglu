@@ -8,6 +8,7 @@ from pyramid.response import Response
 
 def create_user(request: Request) -> Response:
     logic: Logic = request.registry.logic
+
     try:
         email = request.json_body.get('email')
         password = request.json_body.get('password')
@@ -27,6 +28,7 @@ def create_user(request: Request) -> Response:
 
 def login_user(request: Request) -> Response:
     logic: Logic = request.registry.logic
+
     try:
         email = request.json_body.get('email')
         password = request.json_body.get('password')
@@ -65,13 +67,18 @@ def logout_user(request: Request) -> Response:
             'status': 'error',
             'description': 'email or token missing'})
 
+    if logic.read_token(email) != token:
+        return Response(status=httplib.UNAUTHORIZED, json_body={
+            'status': 'error',
+            'description': 'wrong email or token'})
+
     if logic.remove_token(email):
         return Response(status=httplib.OK, json_body={
             'status': 'logged out'})
 
-    return Response(status=httplib.UNAUTHORIZED, json_body={
+    return Response(status=httplib.INTERNAL_SERVER_ERROR, json_body={
         'status': 'error',
-        'description': 'wrong email or token'})
+        'description': 'could not revoke token'})
 
 def notfound(request: Request) -> Response:
     return Response(status=httplib.NOT_FOUND, json_body={

@@ -26,7 +26,7 @@ def setup_routes(config):
     config.add_view(login_user,
                     route_name='login_user')
 
-    #User logout
+    # User logout
     config.add_route('logout_user',
                      request_method='POST',
                      pattern='/logout')
