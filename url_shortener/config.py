@@ -26,6 +26,11 @@ _CONFIG_VALIDATOR = t.Dict(
               default="http://127.0.0.1:6543",
               to_name='base_url'):
         t.URL,
+        t.Key('USER_DB',
+              optional=True,
+              default="users.json",
+              to_name='user_db'):
+        t.String,
     },
     ignore_extra='*')
 
@@ -33,6 +38,7 @@ _CONFIG_VALIDATOR = t.Dict(
 class Config(NamedTuple):
     base_url: str
     port: int
+    user_db: str
 
 
 def load_config(app_config) -> Config:

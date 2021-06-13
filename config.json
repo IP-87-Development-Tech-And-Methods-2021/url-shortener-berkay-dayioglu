@@ -4,5 +4,7 @@
 	"app":{
 		"BASE_URL": "http://127.0.0.1:5432",
 		"PORT": 5432
-	}
+	},
+    "storage":{
+        "USER_DB": "users.json"
 }
