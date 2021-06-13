@@ -1,6 +1,6 @@
-def test_public(testapp):
-    res = testapp.get('/public', status=200)
-    assert 'available_for' in res.json_body
+def test_redirect(testapp):
+    res = testapp.get('/test', status=302)
+    assert 'https://google.com' in res.location
 
 
 def test_notfound(testapp):
