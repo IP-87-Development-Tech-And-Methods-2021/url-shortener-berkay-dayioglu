@@ -51,8 +51,8 @@ class PermanentStorage():
 
     def remove_url(self, email: str, url_short: str):
         with self._write_lock:
-            user_data = self.users.search(self.User.email == email)
-            user_data.url_list.pop("url_short", None)
+            user_data = self.users.search(self.User.email == email)[0]
+            user_data['url_list'].pop("url_short", None)
 
 
 class InMemoryStorage():

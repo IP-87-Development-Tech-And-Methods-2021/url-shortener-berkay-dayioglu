@@ -43,7 +43,7 @@ class Logic:
         return True
 
     def remove_user(self, email: str):
-        self._storage.remove_user(email, password)
+        self._storage.remove_user(email)
 
     def authenticate_user(self, email: str, password: str):
         user_data = self._storage.get_user_data(email)
