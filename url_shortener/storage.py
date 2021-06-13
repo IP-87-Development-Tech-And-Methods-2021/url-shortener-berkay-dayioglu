@@ -6,12 +6,12 @@ from typing import Dict, Optional
 from tinydb import TinyDB, Query
 
 class PermanentStorage():
-    def __init__(self):
-        dirname = os.path.dirname(__file__)
-        filename_users = os.path.join(dirname, 'db/users.json')
-        self.filename_users = filename_users
+    def __init__(self, filename_users='users.json'):
+        dirname = os.path.join(os.path.dirname(__file__), 'db/')
+        filepath_users = os.path.join(dirname, filename_users)
+        self.filepath_users = filepath_users
         self._write_lock: Lock = Lock()
-        self.users = TinyDB(filename_users)
+        self.users = TinyDB(filepath_users)
         self.User = Query()
 
     def get_user_data(self, email: str):
