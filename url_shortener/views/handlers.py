@@ -135,7 +135,7 @@ def url_redirect(request: Request) -> Response:
     try:
         url_orig = logic.get_original_url(url_short)
     except:
-        return Response(status=httplib.INTERNAL_SERVER_ERROR, json_body={
+        return Response(status=httplib.NOT_FOUND, json_body={
             'status': 'error',
             'description': 'could not retrieve original url'})
 

@@ -45,8 +45,8 @@ def make_app(app_config: Config):
     setup_routes(config)
 
     # setup "global" objects into the registry
-    storage_mem = InMemoryStorage()
     storage = PermanentStorage()
+    storage_mem = InMemoryStorage()
 
     config.registry.base_url: str = app_config.base_url
     config.registry.logic = Logic(storage=storage, storage_mem=storage_mem)
