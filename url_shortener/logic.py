@@ -100,6 +100,9 @@ class Logic:
         self._storage_mem.write(email, None)
         return True
 
+    def get_working_db(self):
+        return self._storage.filepath_users
+
 
 """
     def find_user_by_token(self, token: str) -> Optional[User]:
